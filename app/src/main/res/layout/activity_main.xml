@@ -15,23 +15,7 @@
         android:hint="Phone Number"
         />
 
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:hint="Type message "
-        android:layout_margin="8dp"
-        android:gravity="top"
-        android:inputType="textLongMessage"
-        />
-    <Button
-        android:id="@+id/send"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SEND"
-        android:layout_margin="20dp"
-        android:layout_gravity="center_horizontal"
-        />
+
 
     <Button
         android:id="@+id/addtocontacts"
@@ -47,15 +31,15 @@
         android:text="Current location"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:layout_gravity="center"
         android:textAlignment="center"/>
 
     <Button
         android:id="@+id/button_location"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get location"
+        android:text="EMERGENCY"
         android:layout_margin="20dp"
         android:layout_gravity="center"/>
 

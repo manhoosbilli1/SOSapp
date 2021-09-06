@@ -44,7 +44,10 @@ public class MainActivity extends AppCompatActivity{
     databaseHandler myDB;
     private final int REQUEST_CHECK_CODE = 8989;
     private LocationSettingsRequest.Builder builder;
-    String x = "", y = "";
+    String x = "";
+    String y = "";
+    double lat;
+    double longitude;
     private static final int REQUEST_LOCATION = 1;
 
     LocationManager locationManager;
@@ -56,8 +59,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         number = findViewById(R.id.number);
-        message = findViewById(R.id.message);
-        send = findViewById(R.id.send);
         add = findViewById(R.id.addtocontacts);
         myDB = new databaseHandler(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -77,13 +78,25 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 try {
                     GPSTracker gpsTracker = new GPSTracker(MainActivity.this);
-                    double lat = gpsTracker.getLatitude();
-                    double longitude = gpsTracker.getLongitude();
-                    textView_location.setText("Latitude: "+lat + "," + "Longitude: "+ longitude);
+                    lat = gpsTracker.getLatitude();
+                    longitude = gpsTracker.getLongitude();
+                    textView_location.setText("Lat: "+lat + ", " + "Lon: "+ longitude);
                     Toast.makeText(MainActivity.this,"Fetched location succesfully",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this,"Couldn't fetch location",Toast.LENGTH_SHORT).show();
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
+                        if(lat != 0.0 && longitude != 0.0) {
+                            sendSMS();
+                        }else {
+                            Toast.makeText(MainActivity.this, "Coordinate values zero", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
+                    }
                 }
 
             }
@@ -106,49 +119,53 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //startTrack();
+//        send.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //startTrack();
 //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
 //                    if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
-//                        sendSMS();
+//                        if(lat != 0.0 && longitude != 0.0) {
+//                            sendSMS();
+//                        }else {
+//                            Toast.makeText(MainActivity.this, "Coordinate values zero", Toast.LENGTH_SHORT).show();
+//                        }
 //                    }
 //                    else {
 //                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
 //                    }
-            }
-        });
+//            }
+//        }});
 
 
     }
 
-    private void loadData(){
-        ArrayList<String> theList = new ArrayList<>();
-        Cursor data = myDB.getListContents();
-        if(data.getCount() == 0){
-            Toast.makeText(this,"No content to show",Toast.LENGTH_SHORT).show();
-        }
-        else {
-            String msg = "I AM IN DANGER:" +x+"Longitude:" +y;
-            String number = "";
-            while (data.moveToNext()){
-                theList.add(data.getString(1));
-                number = number + data.getString(1) + (data.isLast()?"":";");
-                //TODO: tutorial stopped here. continue from here
-            }
-            if(!theList.isEmpty()){
-                //sendSMS();
-                Toast.makeText(this, "List is empty", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+//    private void loadData(){
+//        ArrayList<String> theList = new ArrayList<>();
+//        Cursor data = myDB.getListContents();
+//        if(data.getCount() == 0){
+//            Toast.makeText(this,"No content to show",Toast.LENGTH_SHORT).show();
+//        }
+//        else {
+//            String msg = "I AM IN DANGER:" +x+"Longitude:" +y;
+//            String number = "";
+//            while (data.moveToNext()){
+//                theList.add(data.getString(1));
+//                number = number + data.getString(1) + (data.isLast()?"":";");
+//                //TODO: tutorial stopped here. continue from here
+//            }
+//            if(!theList.isEmpty()){
+//                //sendSMS();
+//                Toast.makeText(this, "List is empty", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 
 
 
     private void sendSMS(){
         String num = number.getText().toString().trim();
-        String msg = message.getText().toString().trim();
+        String msg = "Help! I am in danger"  + ". location:" + lat + ", " + longitude;
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(num,null,msg,null,null);
