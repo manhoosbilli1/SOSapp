@@ -1,57 +1,30 @@
 package com.example.sosapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationSettingsRequest;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity{
-    private EditText number, message;
-    private Button send, add, button_location;
+    private EditText number;
     private TextView textView_location;
-    private FusedLocationProviderClient client;
     databaseHandler myDB;
-    private final int REQUEST_CHECK_CODE = 8989;
-    private LocationSettingsRequest.Builder builder;
-    String x = "";
-    String y = "";
     double lat;
     double longitude;
-    private static final int REQUEST_LOCATION = 1;
 
     LocationManager locationManager;
-    Intent mIntent;
 
     //this is the main activity that first open up. this will point to other activities for example register etc
     @Override
@@ -59,11 +32,11 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         number = findViewById(R.id.number);
-        add = findViewById(R.id.addtocontacts);
+        Button add = findViewById(R.id.addtocontacts);
         myDB = new databaseHandler(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         textView_location = findViewById(R.id.text_location);
-        button_location = findViewById(R.id.button_location);
+        Button button_location = findViewById(R.id.button_location);
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -81,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
                     lat = gpsTracker.getLatitude();
                     longitude = gpsTracker.getLongitude();
                     textView_location.setText("Lat: "+lat + ", " + "Lon: "+ longitude);
-                    Toast.makeText(MainActivity.this,"Fetched location succesfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Fetched location successfully",Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this,"Couldn't fetch location",Toast.LENGTH_SHORT).show();
@@ -102,15 +75,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-//        //if gps is not turned on. turn it on
-//        if (!locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
-//            onGPS();
-//        }
-//        else {
-//            startTrack();
-//        }
-
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,23 +83,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-//        send.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //startTrack();
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-//                    if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
-//                        if(lat != 0.0 && longitude != 0.0) {
-//                            sendSMS();
-//                        }else {
-//                            Toast.makeText(MainActivity.this, "Coordinate values zero", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                    else {
-//                        requestPermissions(new String[]{Manifest.permission.SEND_SMS}, 1);
-//                    }
-//            }
-//        }});
 
 
     }
@@ -169,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(num,null,msg,null,null);
-            Toast.makeText(this,"Message succesfully sent",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Message successfully sent",Toast.LENGTH_SHORT).show();
         }
         catch (Exception e){
             e.printStackTrace();
