@@ -17,27 +17,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity{
-    private EditText number;
     private TextView textView_location;
     databaseHandler myDB;
     double lat;
     double longitude;
+    List<String> myList = new ArrayList<String>();
 
     LocationManager locationManager;
+    DatabaseHelper dbHandler;
 
     //this is the main activity that first open up. this will point to other activities for example register etc
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        number = findViewById(R.id.number);
         Button add = findViewById(R.id.addtocontacts);
         myDB = new databaseHandler(this);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         textView_location = findViewById(R.id.text_location);
         Button button_location = findViewById(R.id.button_location);
+        dbHandler = new DatabaseHelper(MainActivity.this);
+        myList = dbHandler.getEveryone();
 
+
+//get permission to track location
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
@@ -59,10 +66,13 @@ public class MainActivity extends AppCompatActivity{
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this,"Couldn't fetch location",Toast.LENGTH_SHORT).show();
                 }
+                //checking for permission to send sms
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                     if(checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED){
                         if(lat != 0.0 && longitude != 0.0) {
-                            sendSMS();
+                            for (int i = 0; i < myList.size(); i++) {
+                                 sendSMS(myList.get(i));
+                            }
                         }else {
                             Toast.makeText(MainActivity.this, "Coordinate values zero", Toast.LENGTH_SHORT).show();
                         }
@@ -111,8 +121,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-    private void sendSMS(){
-        String num = number.getText().toString().trim();
+    private void sendSMS(String num){
         String msg = "Help! I am in danger"  + ". location:" + lat + ", " + longitude;
         try {
             SmsManager smsManager = SmsManager.getDefault();
