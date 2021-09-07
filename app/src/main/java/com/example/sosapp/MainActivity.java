@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
             }, 100);
 
         }
-
+//button location is actually emergency button on mainacitivity
         button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity{
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), Register.class);
+                Intent i = new Intent(getApplicationContext(), database.class);
                 startActivity(i);
             }
         });
