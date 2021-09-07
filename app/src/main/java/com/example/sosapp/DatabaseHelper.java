@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,5 +75,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return myList;
 
+    }
+
+    public void delete(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(NUMBER_TABLE, null, null);
     }
 }
