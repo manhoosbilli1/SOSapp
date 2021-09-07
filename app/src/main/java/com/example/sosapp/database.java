@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class database extends AppCompatActivity {
 
     EditText phone_num;
@@ -52,6 +54,10 @@ public class database extends AppCompatActivity {
         viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DatabaseHelper databaseHelper = new DatabaseHelper(database.this);
+                List<String> everyone = databaseHelper.getEveryone();
+
+                Toast.makeText(database.this,  everyone.toString(),Toast.LENGTH_SHORT).show();
 
             }
         });
