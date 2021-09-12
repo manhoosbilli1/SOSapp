@@ -42,7 +42,7 @@ public class database extends AppCompatActivity {
                     Toast.makeText(database.this, "Please enter a number into the field", Toast.LENGTH_SHORT).show();
                     return;
                 }else {
-                    if(number.length() <= 11 && number.length() >=9){
+                    if(number.length() <= 20 && number.length() >=9){
                         boolean success = databaseHelper.addOne(number);
                         showNumbers(databaseHelper);
                         Toast.makeText(database.this, "Successfully added", Toast.LENGTH_SHORT).show();
@@ -61,8 +61,8 @@ public class database extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     DatabaseHelper databaseHelper = new DatabaseHelper(database.this);
-                    showNumbers(databaseHelper);
                     databaseHelper.delete();
+                    showNumbers(databaseHelper);
                     Toast.makeText(database.this, "Successfully delete the database", Toast.LENGTH_SHORT).show();
                 } catch (Exception e){
                     e.printStackTrace();

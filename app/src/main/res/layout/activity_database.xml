@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_margin="60dp"
         android:hint="Enter phone number"
-        android:maxLength="11"
+        android:maxLength="20"
         android:inputType="phone"
         />
     <LinearLayout
